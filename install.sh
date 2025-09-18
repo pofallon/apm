@@ -17,7 +17,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO="danielmeppiel/apm-cli"
+REPO="danielmeppiel/apm"
 INSTALL_DIR="/usr/local/bin"
 BINARY_NAME="apm"
 
