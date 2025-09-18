@@ -1,11 +1,17 @@
-# APM CLI - Agent Package Manager
+# Agent Package Manager - npm for Agents
 
 [![PyPI version](https://badge.fury.io/py/apm-cli.svg)](https://badge.fury.io/py/apm-cli)
 [![CI/CD Pipeline](https://github.com/danielmeppiel/apm/actions/workflows/build-release.yml/badge.svg)](https://github.com/danielmeppiel/apm/actions/workflows/build-release.yml)
 [![Downloads](https://img.shields.io/pypi/dm/apm-cli.svg)](https://pypi.org/project/apm-cli/)
 [![GitHub stars](https://img.shields.io/github/stars/danielmeppiel/apm.svg?style=social&label=Star)](https://github.com/danielmeppiel/apm/stargazers)
 
-**Package Agentic workflows and Agent context as code** - Like npm for JavaScript, but for AI development components.
+**Stop copy-pasting prompts and instructions. Start packaging them.**
+
+✅ Works with **GitHub Copilot, Cursor, Claude, Codex, Gemini, VSCode, Aider and all [AGENTS.md](https://agents.md) supporting agents**  
+✅ **2-minute setup** - zero config  
+✅ **Team collaboration** - composable context, without wheel reinvention
+
+**Compound innovation** - reuse [packages built with APM by the community](#built-with-apm)
 
 ## What Goes in Packages
 
@@ -14,18 +20,7 @@
 - **Agents** - Agentic workflows (.prompt.md files)
 - **Context** - Company rules, standards, knowledge (.instructions.md files) and domain boundaries (.chatmode.md)
 
-## Real Examples
-
 ![APM Demo](docs/apm-demo.gif)
-
-**APM Packages** (reusable modules):
-- 🏢 [`compliance-rules`](https://github.com/danielmeppiel/compliance-rules) - GDPR contexts + audit workflows  
-- 👤 [`design-guidelines`](https://github.com/danielmeppiel/design-guidelines) - Accessibility rules + UI review workflows
-
-**Application using APM**:
-- 🚀 **[Corporate Website](https://github.com/danielmeppiel/corporate-website)** - Complete showcase demonstrating Context Optimization Engine + both packages above as dependencies
-
-**Result**: Your Agents work consistently and follow your team's rules across all projects.
 
 ## Quick Start (2 minutes)
 
@@ -99,15 +94,6 @@ apm deps list         # List installed APM dependencies
 apm run <workflow>    # Execute Agent workflows
 ```
 
-## Why APM?
-
-Replace inconsistent prompting with engineered context + workflows:
-
-**❌ Before**: "Add authentication" → unpredictable results across team members  
-**✅ With APM**: Shared context + structured workflows → consistent, compliant outcomes
-
-**The Power**: Your AI agents know your company's security standards, design guidelines, and compliance requirements **before** they start coding.
-
 ## Installation Options
 
 ### Homebrew
@@ -122,6 +108,22 @@ pip install apm-cli
 ```
 
 [See complete installation guide](docs/getting-started.md) for all options and troubleshooting.
+
+## Demo Example
+
+**APM Packages** (reusable modules):
+- 🏢 [`compliance-rules`](https://github.com/danielmeppiel/compliance-rules) - GDPR contexts + audit workflows  
+- 👤 [`design-guidelines`](https://github.com/danielmeppiel/design-guidelines) - Accessibility rules + UI review workflows
+
+**Application using APM**:
+- 🚀 **[Corporate Website](https://github.com/danielmeppiel/corporate-website)** - Complete showcase demonstrating Context Optimization Engine + both packages above as dependencies
+
+## 🌟 Built with APM
+
+*Copy this badge for your APM projects* [![Built with APM](https://img.shields.io/badge/📦_Built_with-APM-blue?style=flat-square)](https://github.com/danielmeppiel/apm)
+
+- 🏢 [Platform Mode](https://github.com/DevExpGbb/platform-mode) - The Future of AI-Enhanced Platform Engineering
+- [Add yours here!](https://github.com/danielmeppiel/apm/discussions/new)
 
 ## Next Steps
 
