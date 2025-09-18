@@ -158,7 +158,7 @@ apm compile
 
 ```bash
 # Show optimization reasoning
-apm compile --debug
+apm compile --verbose
 
 # Example detailed output:
 🔬 Mathematical Analysis:
@@ -178,7 +178,7 @@ apm compile --debug
 apm compile --dry-run
 
 # Timing instrumentation
-apm compile --debug --verbose
+apm compile --verbose
 # Shows: ⏱️ Project Analysis: 45.2ms
 #        ⏱️ Instruction Processing: 82.1ms
 ```
@@ -387,7 +387,7 @@ The result: AI agents that work efficiently and reliably, regardless of project 
 
 ```bash
 # See the mathematics in action
-apm compile --debug
+apm compile --verbose
 
 # Experience optimized AI development
 apm init my-project && cd my-project && apm compile

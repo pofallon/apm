@@ -37,7 +37,7 @@ APM automatically compiles your primitives into optimized AGENTS.md files using 
 
 ```bash
 apm compile  # Generate optimized AGENTS.md files
-apm compile --debug  # See optimization decisions
+apm compile --verbose  # See optimization decisions
 ```
 
 **[Learn more about the Context Optimization Engine →](compilation.md)**
