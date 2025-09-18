@@ -16,7 +16,7 @@
 
 ## Real Examples
 
-https://github.com/user-attachments/assets/0c5360ed-a735-4f59-ae8e-866660b91cf0
+![APM Demo](docs/apm-demo.gif)
 
 **APM Packages** (reusable modules):
 - 🏢 [`compliance-rules`](https://github.com/danielmeppiel/compliance-rules) - GDPR contexts + audit workflows  
