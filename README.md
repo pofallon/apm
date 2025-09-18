@@ -85,7 +85,7 @@ scripts:
 
 ## Mathematical Context Optimization
 
-APM solves the AI agent scalability problem through constraint satisfaction optimization.
+APM solves the AI agent context scalability problem through constraint satisfaction optimization.
 
 **[Learn more about the Context Optimization Engine →](docs/compilation.md)**
 
