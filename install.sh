@@ -80,9 +80,11 @@ echo -e "${YELLOW}Fetching latest release information...${NC}"
 
 # Try to fetch release info without authentication first (for public repos)
 LATEST_RELEASE=$(curl -s "https://api.github.com/repos/$REPO/releases/latest")
+CURL_EXIT_CODE=$?
 
 # Check if the response indicates authentication is required (private repo)
-if [ $? -ne 0 ] || [ -z "$LATEST_RELEASE" ] || echo "$LATEST_RELEASE" | grep -q '"message".*"Not Found"'; then
+# Only try authentication if curl failed OR we got a "Not Found" message OR response is empty
+if [ $CURL_EXIT_CODE -ne 0 ] || [ -z "$LATEST_RELEASE" ] || echo "$LATEST_RELEASE" | grep -q '"message".*"Not Found"'; then
     echo -e "${BLUE}Repository appears to be private, trying with authentication...${NC}"
     
     # Check if we have GitHub token for private repo access
@@ -105,11 +107,24 @@ if [ $? -ne 0 ] || [ -z "$LATEST_RELEASE" ] || echo "$LATEST_RELEASE" | grep -q 
     
     # Retry with authentication
     LATEST_RELEASE=$(curl -s -H "Authorization: token $AUTH_HEADER_VALUE" "https://api.github.com/repos/$REPO/releases/latest")
+    CURL_EXIT_CODE=$?
 fi
 
-if [ $? -ne 0 ] || [ -z "$LATEST_RELEASE" ]; then
+if [ $CURL_EXIT_CODE -ne 0 ] || [ -z "$LATEST_RELEASE" ]; then
     echo -e "${RED}Error: Failed to fetch release information${NC}"
     echo "Please check your internet connection and try again."
+    exit 1
+fi
+
+# Check if we got a valid response (should contain tag_name)
+if ! echo "$LATEST_RELEASE" | grep -q '"tag_name":'; then
+    echo -e "${RED}Error: Invalid API response received${NC}"
+    
+    # Check if the response contains an error message
+    if echo "$LATEST_RELEASE" | grep -q '"message"'; then
+        echo -e "${RED}GitHub API Error:${NC}"
+        echo "$LATEST_RELEASE" | grep '"message"' | sed 's/.*"message": *"\([^"]*\)".*/\1/'
+    fi
     exit 1
 fi
 
@@ -122,6 +137,14 @@ ASSET_URL=$(echo "$LATEST_RELEASE" | grep -B 3 "\"name\": \"$DOWNLOAD_BINARY\"" 
 
 if [ -z "$TAG_NAME" ]; then
     echo -e "${RED}Error: Could not determine latest release version${NC}"
+    echo -e "${BLUE}Debug: Full API response:${NC}" >&2
+    echo "$LATEST_RELEASE" >&2
+    echo ""
+    echo "This could mean:"
+    echo "  1. No releases found in the repository"
+    echo "  2. API response format is unexpected"
+    echo "  3. Token doesn't have sufficient permissions"
+    echo "  4. Repository doesn't exist or is inaccessible"
     exit 1
 fi
 
