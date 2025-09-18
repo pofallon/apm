@@ -7,7 +7,7 @@
 
 **Stop copy-pasting prompts and instructions. Start packaging them.**
 
-✅ Works with **GitHub Copilot, Cursor, Claude, Codex, Gemini, VSCode, Aider and all [AGENTS.md](https://agents.md) supporting agents**  
+✅ Works with **GitHub Copilot, Cursor, Claude, Codex, Gemini and all [AGENTS.md](https://agents.md) adherents**  
 ✅ **2-minute setup** - zero config  
 ✅ **Team collaboration** - composable context, without wheel reinvention
 
@@ -83,6 +83,12 @@ scripts:
 - **Dependency Management** - `apm_modules/` with shared context from other projects  
 - **Universal Compatibility** - Works with any coding agent supporting the `Agents.md` standard (e.g. GitHub Copilot, Cursor, Claude, Codex, Gemini...)
 
+## Mathematical Context Optimization
+
+APM solves the AI agent scalability problem through constraint satisfaction optimization.
+
+**[Learn more about the Context Optimization Engine →](docs/compilation.md)**
+
 ## Key Commands
 
 ```bash
@@ -127,7 +133,7 @@ pip install apm-cli
 
 ## Next Steps
 
-- 📖 [Complete Documentation](docs/index.md) - Deep dive into APM
+- 📖 [Complete Documentation](docs/README.md) - Deep dive into APM
 - 🚀 [Getting Started Guide](docs/getting-started.md) - Extended setup and first project
 - 🧠 [Core Concepts](docs/concepts.md) - AI-Native Development framework  
 - 📦 [Examples & Use Cases](docs/examples.md) - Real-world workflow patterns
