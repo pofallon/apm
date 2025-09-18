@@ -460,18 +460,22 @@ class PromptCompiler:
         apm_modules_dir = Path("apm_modules")
         if apm_modules_dir.exists():
             # Search all dependency directories for the prompt file
-            for dep_dir in apm_modules_dir.iterdir():
-                if dep_dir.is_dir():
-                    # Check in the root of the dependency
-                    dep_prompt_path = dep_dir / prompt_file
-                    if dep_prompt_path.exists():
-                        return dep_prompt_path
-                    
-                    # Also check in common subdirectories
-                    for subdir in ['prompts', '.', 'workflows']:
-                        sub_prompt_path = dep_dir / subdir / prompt_file
-                        if sub_prompt_path.exists():
-                            return sub_prompt_path
+            # Handle org/repo directory structure (e.g., apm_modules/danielmeppiel/compliance-rules/)
+            for org_dir in apm_modules_dir.iterdir():
+                if org_dir.is_dir() and not org_dir.name.startswith('.'):
+                    # Iterate through repos within the org
+                    for repo_dir in org_dir.iterdir():
+                        if repo_dir.is_dir() and not repo_dir.name.startswith('.'):
+                            # Check in the root of the repository
+                            dep_prompt_path = repo_dir / prompt_file
+                            if dep_prompt_path.exists():
+                                return dep_prompt_path
+                            
+                            # Also check in common subdirectories
+                            for subdir in ['prompts', '.', 'workflows']:
+                                sub_prompt_path = repo_dir / subdir / prompt_file
+                                if sub_prompt_path.exists():
+                                    return sub_prompt_path
         
         # If still not found, raise an error with helpful message
         searched_locations = [
@@ -482,9 +486,11 @@ class PromptCompiler:
         
         if apm_modules_dir.exists():
             searched_locations.append("Dependencies:")
-            for dep_dir in apm_modules_dir.iterdir():
-                if dep_dir.is_dir():
-                    searched_locations.append(f"  - {dep_dir.name}/{prompt_file}")
+            for org_dir in apm_modules_dir.iterdir():
+                if org_dir.is_dir() and not org_dir.name.startswith('.'):
+                    for repo_dir in org_dir.iterdir():
+                        if repo_dir.is_dir() and not repo_dir.name.startswith('.'):
+                            searched_locations.append(f"  - {org_dir.name}/{repo_dir.name}/{prompt_file}")
         
         raise FileNotFoundError(
             f"Prompt file '{prompt_file}' not found.\n"

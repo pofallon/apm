@@ -328,8 +328,8 @@ class TestPromptCompilerDependencyDiscovery:
                 import os
                 os.chdir(tmpdir)
                 
-                # Create apm_modules structure
-                dep_dir = Path("apm_modules/design-guidelines")
+                # Create apm_modules structure with org/repo hierarchy
+                dep_dir = Path("apm_modules/danielmeppiel/design-guidelines")
                 dep_dir.mkdir(parents=True)
                 
                 # Create prompt file in dependency root
@@ -372,10 +372,10 @@ class TestPromptCompilerDependencyDiscovery:
                 import os
                 os.chdir(tmpdir)
                 
-                # Create multiple dependency directories
-                compliance_dir = Path("apm_modules/compliance-rules")
+                # Create multiple dependency directories with org/repo structure
+                compliance_dir = Path("apm_modules/danielmeppiel/compliance-rules")
                 compliance_dir.mkdir(parents=True)
-                design_dir = Path("apm_modules/design-guidelines")
+                design_dir = Path("apm_modules/danielmeppiel/design-guidelines")
                 design_dir.mkdir(parents=True)
                 
                 # Create prompt files in both (first one found should win)
@@ -420,9 +420,9 @@ class TestPromptCompilerDependencyDiscovery:
                 os.chdir(tmpdir)
                 
                 # Create apm_modules with dependencies but no prompt files
-                compliance_dir = Path("apm_modules/compliance-rules")
+                compliance_dir = Path("apm_modules/danielmeppiel/compliance-rules")
                 compliance_dir.mkdir(parents=True)
-                design_dir = Path("apm_modules/design-guidelines")
+                design_dir = Path("apm_modules/danielmeppiel/design-guidelines")
                 design_dir.mkdir(parents=True)
                 
                 with pytest.raises(FileNotFoundError) as exc_info:
@@ -432,8 +432,8 @@ class TestPromptCompilerDependencyDiscovery:
                 assert "Prompt file 'hello-world.prompt.md' not found" in error_msg
                 assert "Local: hello-world.prompt.md" in error_msg
                 assert "Dependencies:" in error_msg
-                assert "compliance-rules/hello-world.prompt.md" in error_msg
-                assert "design-guidelines/hello-world.prompt.md" in error_msg
+                assert "danielmeppiel/compliance-rules/hello-world.prompt.md" in error_msg
+                assert "danielmeppiel/design-guidelines/hello-world.prompt.md" in error_msg
             finally:
                 os.chdir(original_cwd)
     
@@ -450,7 +450,7 @@ class TestPromptCompilerDependencyDiscovery:
                 local_prompt.write_text("Hello from local!")
                 
                 # Create dependency with same file
-                dep_dir = Path("apm_modules/design-guidelines")
+                dep_dir = Path("apm_modules/danielmeppiel/design-guidelines")
                 dep_dir.mkdir(parents=True)
                 dep_prompt = dep_dir / "hello-world.prompt.md"
                 dep_prompt.write_text("Hello from dependency!")
@@ -466,7 +466,7 @@ class TestPromptCompilerDependencyDiscovery:
     def test_compile_with_dependency_resolution(self, mock_file, mock_mkdir):
         """Test compile method uses dependency resolution correctly."""
         with patch.object(self.compiler, '_resolve_prompt_file') as mock_resolve:
-            mock_resolve.return_value = Path("apm_modules/design-guidelines/test.prompt.md")
+            mock_resolve.return_value = Path("apm_modules/danielmeppiel/design-guidelines/test.prompt.md")
             
             file_content = "Hello ${input:name}!"
             mock_file.return_value.read.return_value = file_content
@@ -479,4 +479,4 @@ class TestPromptCompilerDependencyDiscovery:
             # Verify file was opened with resolved path
             mock_file.assert_called()
             opened_path = mock_file.call_args_list[0][0][0]
-            assert str(opened_path) == "apm_modules/design-guidelines/test.prompt.md"
+            assert str(opened_path) == "apm_modules/danielmeppiel/design-guidelines/test.prompt.md"
