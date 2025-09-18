@@ -2,11 +2,11 @@
 set -e
 
 # APM CLI Installer Script
-# Usage: curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm-cli/mai# Extract API asset URL for private repository downloads
+# Usage: curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/mai# Extract API asset URL for private repository downloads
 ASSET_URL=$(echo "$LATEST_RELEASE" | grep -B 2 '"name": "'$DOWNLOAD_BINARY'"' | grep '"url":' | sed -E 's/.*"url": "([^"]+)".*/\1/')install.sh | sh
 # For private repositories, use with authentication:
 #   curl -sSL -H "Authorization: token $GITHUB_APM_PAT" \
-#     https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | \
+#     https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | \
 #     GITHUB_APM_PAT=$GITHUB_APM_PAT sh
 
 # Colors for output
@@ -98,7 +98,7 @@ if [ $? -ne 0 ] || [ -z "$LATEST_RELEASE" ] || echo "$LATEST_RELEASE" | grep -q 
         echo "Please set GITHUB_APM_PAT or GITHUB_TOKEN environment variable:"
         echo "  export GITHUB_APM_PAT=your_token_here"
         echo "  curl -sSL -H \"Authorization: token \$GITHUB_APM_PAT\" \\"
-        echo "    https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | \\"
+        echo "    https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | \\"
         echo "    GITHUB_APM_PAT=\$GITHUB_APM_PAT sh"
         exit 1
     fi
@@ -204,7 +204,7 @@ else
         echo "For private repositories, set GITHUB_APM_PAT environment variable:"
         echo "  export GITHUB_APM_PAT=your_token_here"
         echo "  curl -sSL -H \"Authorization: token \$GITHUB_APM_PAT\" \\"
-        echo "    https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | \\"
+        echo "    https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | \\"
         echo "    GITHUB_APM_PAT=\$GITHUB_APM_PAT sh"
         echo ""
         echo "You can also try installing from source:"

@@ -10,7 +10,7 @@ export GITHUB_APM_PAT=your_fine_grained_token_here
 # Optional: export GITHUB_TOKEN=your_models_token           # For Codex CLI with GitHub Models
 
 # 2. Install APM CLI (GitHub org members)
-curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
 
 # 3. Setup runtime
 apm runtime setup codex  
@@ -26,20 +26,20 @@ apm compile && apm run start --param name="<YourGitHubHandle>"
 
 ### Quick Install (Recommended)
 ```bash
-curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
 ```
 
 ### Manual Download
-Download from [GitHub Releases](https://github.com/danielmeppiel/apm-cli/releases/latest):
+Download from [GitHub Releases](https://github.com/danielmeppiel/apm/releases/latest):
 ```bash
 # Linux x86_64
-curl -L https://github.com/danielmeppiel/apm-cli/releases/latest/download/apm-linux-x86_64 -o apm && chmod +x apm
+curl -L https://github.com/danielmeppiel/apm/releases/latest/download/apm-linux-x86_64 -o apm && chmod +x apm
 
 # macOS Intel
-curl -L https://github.com/danielmeppiel/apm-cli/releases/latest/download/apm-darwin-x86_64 -o apm && chmod +x apm
+curl -L https://github.com/danielmeppiel/apm/releases/latest/download/apm-darwin-x86_64 -o apm && chmod +x apm
 
 # macOS Apple Silicon  
-curl -L https://github.com/danielmeppiel/apm-cli/releases/latest/download/apm-darwin-arm64 -o apm && chmod +x apm
+curl -L https://github.com/danielmeppiel/apm/releases/latest/download/apm-darwin-arm64 -o apm && chmod +x apm
 ```
 
 ### From Source (Developers)

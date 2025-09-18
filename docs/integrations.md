@@ -214,7 +214,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup APM
-        run: curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | sh
+        run: curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
       - name: Code Review
         run: |
           apm compile
@@ -234,7 +234,7 @@ Containerize APM workflows for consistent environments:
 FROM python:3.12-slim
 
 # Install APM
-RUN curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh | sh
+RUN curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
 
 # Install runtimes
 RUN apm runtime setup copilot

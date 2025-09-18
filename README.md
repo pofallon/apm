@@ -35,7 +35,7 @@ export GITHUB_APM_PAT=your_fine_grained_token_here
 export GITHUB_TOKEN=your_token_for_github_models
 
 # 2. Install APM CLI (GitHub org members)
-curl -sSL "https://raw.githubusercontent.com/danielmeppiel/apm-cli/main/install.sh" | sh
+curl -sSL "https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh" | sh
 
 # 3. Set up runtime (uses free GitHub Models)
 apm runtime setup codex
