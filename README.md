@@ -11,6 +11,8 @@
 
 ## Real Examples
 
+https://github.com/user-attachments/assets/0c5360ed-a735-4f59-ae8e-866660b91cf0
+
 **APM Packages** (reusable modules):
 - 🏢 [`compliance-rules`](https://github.com/danielmeppiel/compliance-rules) - GDPR contexts + audit workflows  
 - 👤 [`design-guidelines`](https://github.com/danielmeppiel/design-guidelines) - Accessibility rules + UI review workflows
