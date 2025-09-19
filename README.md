@@ -127,7 +127,7 @@ pip install apm-cli
 ## 🌟 APM Packages
 *Copy this badge for your APM packages* 
 
-[![APM Package](https://img.shields.io/badge/📦_APM-Package-blue?style=flat-square)](https://github.com/danielmeppiel/apm) 
+[![Install with APM](https://img.shields.io/badge/📦_Install_with-APM-blue?style=flat-square)](https://github.com/danielmeppiel/apm#-apm-packages) 
 
 Install any of the below APM packages with: `apm install <owner>/<repo>`
 
