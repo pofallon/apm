@@ -1,6 +1,6 @@
 # APM Documentation
 
-Welcome to the Agent Primitives Manager documentation. Choose your path:
+Welcome to the Agent Package Manager documentation. Choose your path:
 
 ## 🚀 **Getting Started**
 - **[Quick Start Guide](../README.md#quick-start-2-minutes)** - 2-minute setup

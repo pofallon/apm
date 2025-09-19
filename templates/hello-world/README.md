@@ -1,6 +1,6 @@
 # {{project_name}}
 
-An APM (Agent Primitives Manager) application with comprehensive primitives compilation examples.
+An APM (Agent Package Manager) application with comprehensive primitives compilation examples.
 
 ## Quick Start
 
