@@ -124,11 +124,13 @@ pip install apm-cli
 **Application using APM**:
 - 🚀 **[Corporate Website](https://github.com/danielmeppiel/corporate-website)** - Complete showcase demonstrating Context Optimization Engine + both packages above as dependencies
 
-## 🌟 Built with APM
+## 🌟 APM Packages
 
-*Copy this badge for your APM projects* [![Built with APM](https://img.shields.io/badge/📦_Built_with-APM-blue?style=flat-square)](https://github.com/danielmeppiel/apm)
+*Copy this badge for your APM packages* [![APM Package](https://img.shields.io/badge/📦_APM-Package-blue?style=flat-square)](https://github.com/danielmeppiel/apm)
 
-- 🏢 [Platform Mode](https://github.com/DevExpGbb/platform-mode) - The Future of AI-Enhanced Platform Engineering
+Install any of the below APM packages with: `apm install <owner>/<repo>`
+
+- [DevExpGbb/platform-mode](https://github.com/DevExpGbb/platform-mode) - The Future of AI-Enhanced Platform Engineering
 - [Add yours here!](https://github.com/danielmeppiel/apm/discussions/new)
 
 ## Next Steps
