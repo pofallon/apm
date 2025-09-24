@@ -2,6 +2,7 @@
 
 from .adapters.client.vscode import VSCodeClientAdapter
 from .adapters.client.codex import CodexClientAdapter
+from .adapters.client.copilot import CopilotClientAdapter
 from .adapters.package_manager.default_manager import DefaultMCPPackageManager
 
 
@@ -22,6 +23,7 @@ class ClientFactory:
             ValueError: If the client type is not supported.
         """
         clients = {
+            "copilot": CopilotClientAdapter,
             "vscode": VSCodeClientAdapter,
             "codex": CodexClientAdapter,
             # Add more clients as needed
