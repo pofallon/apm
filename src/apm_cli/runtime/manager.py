@@ -22,6 +22,11 @@ class RuntimeManager:
     def __init__(self):
         self.runtime_dir = Path.home() / ".apm" / "runtimes"
         self.supported_runtimes = {
+            "copilot": {
+                "script": "setup-copilot.sh",
+                "description": "GitHub Copilot CLI with native MCP integration",
+                "binary": "copilot"
+            },
             "codex": {
                 "script": "setup-codex.sh",
                 "description": "OpenAI Codex CLI with GitHub Models support",
@@ -248,7 +253,25 @@ class RuntimeManager:
             click.echo(f"{Fore.RED}❌ Unknown runtime: {runtime_name}{Style.RESET_ALL}", err=True)
             return False
         
-        # Handle runtimes (installed in APM runtime directory)
+        # Handle copilot runtime (npm-based, global install)
+        if runtime_name == "copilot":
+            try:
+                result = subprocess.run(
+                    ["npm", "uninstall", "-g", "@github/copilot"],
+                    capture_output=True,
+                    text=True
+                )
+                if result.returncode == 0:
+                    click.echo(f"{Fore.GREEN}✅ Successfully removed {runtime_name} runtime{Style.RESET_ALL}")
+                    return True
+                else:
+                    click.echo(f"{Fore.RED}❌ Failed to remove {runtime_name}: {result.stderr}{Style.RESET_ALL}", err=True)
+                    return False
+            except Exception as e:
+                click.echo(f"{Fore.RED}❌ Failed to remove {runtime_name}: {e}{Style.RESET_ALL}", err=True)
+                return False
+        
+        # Handle other runtimes (installed in APM runtime directory)
         binary_name = self.supported_runtimes[runtime_name]["binary"]
         binary_path = self.runtime_dir / binary_name
         
@@ -277,7 +300,7 @@ class RuntimeManager:
     
     def get_runtime_preference(self) -> List[str]:
         """Get the runtime preference order."""
-        return ["codex", "llm"]
+        return ["copilot", "codex", "llm"]
     
     def get_available_runtime(self) -> Optional[str]:
         """Get the first available runtime based on preference."""
