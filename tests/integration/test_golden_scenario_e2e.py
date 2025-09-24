@@ -149,6 +149,183 @@ def apm_binary():
 
 class TestGoldenScenarioE2E:
     """End-to-end tests for the exact README hero quick start scenario."""
+    
+    @pytest.mark.skipif(not PRIMARY_TOKEN, reason="GitHub token (GITHUB_APM_PAT or GITHUB_TOKEN) required for E2E tests")
+    def test_complete_golden_scenario_copilot(self, temp_e2e_home, apm_binary):
+        """Test the complete hero quick start from README using Copilot CLI runtime.
+        
+        Validates the exact 6-step flow:
+        1. (Prerequisites: GitHub token via GITHUB_APM_PAT or GITHUB_TOKEN) 
+        2. apm runtime setup copilot (sets up Copilot CLI)
+        3. apm init my-ai-native-project
+        4. cd my-ai-native-project && apm compile
+        5. apm install
+        6. apm run start --param name="<YourGitHubHandle>" (uses Copilot CLI)
+        """
+        
+        # Step 1: Setup Copilot runtime (equivalent to: apm runtime setup copilot)
+        print("\n=== Step 2: Set up your GitHub PAT and an Agent CLI ===")
+        print("GitHub token: ✓ (set via environment - GITHUB_APM_PAT preferred)")
+        print("Installing Copilot CLI runtime...")
+        result = run_command(f"{apm_binary} runtime setup copilot", timeout=300, show_output=True)
+        assert result.returncode == 0, f"Runtime setup failed: {result.stderr}"
+        
+        # Verify copilot is available and GitHub configuration was created
+        copilot_config = Path(temp_e2e_home) / ".copilot" / "mcp-config.json"
+        
+        assert copilot_config.exists(), "Copilot configuration not created"
+        
+        # Verify configuration contains MCP setup
+        config_content = copilot_config.read_text()
+        print(f"✓ Copilot configuration created:\n{config_content}")
+        
+        # Test copilot binary directly
+        print("\n=== Testing Copilot CLI binary directly ===")
+        result = run_command("copilot --version", show_output=True, check=False)
+        if result.returncode == 0:
+            print(f"✓ Copilot version: {result.stdout}")
+        else:
+            print(f"⚠ Copilot version check failed: {result.stderr}")
+            
+        # Check if copilot is in PATH
+        print("\n=== Checking PATH setup ===")
+        result = run_command("which copilot", check=False)
+        if result.returncode == 0:
+            print(f"✓ Copilot found in PATH: {result.stdout.strip()}")
+        else:
+            print("⚠ Copilot not in PATH, will need explicit path or shell restart")
+        
+        # Step 2: Initialize project (equivalent to: apm init my-ai-native-project) 
+        with tempfile.TemporaryDirectory() as project_workspace:
+            project_dir = Path(project_workspace) / "my-ai-native-project"
+            
+            print("\n=== Step 3: Transform your project with AI-Native structure ===")
+            result = run_command(f"{apm_binary} init my-ai-native-project --yes", cwd=project_workspace, show_output=True)
+            assert result.returncode == 0, f"Project init failed: {result.stderr}"
+            assert project_dir.exists(), "Project directory not created"
+            
+            # Verify project structure
+            assert (project_dir / "apm.yml").exists(), "apm.yml not created"
+            assert (project_dir / "hello-world.prompt.md").exists(), "Prompt file not created"
+            
+            # Critical: Verify Agent Primitives (.apm directory) are created
+            apm_dir = project_dir / ".apm"
+            assert apm_dir.exists(), "Agent Primitives directory (.apm) not created - TEMPLATE BUNDLING FAILED"
+            
+            print(f"✓ Verified Agent Primitives directory (.apm) exists")
+            
+            # Show project contents for debugging
+            print("\n=== Project structure ===")
+            apm_yml_content = (project_dir / "apm.yml").read_text()
+            prompt_content = (project_dir / "hello-world.prompt.md").read_text()
+            print(f"apm.yml:\n{apm_yml_content}")
+            print(f"hello-world.prompt.md:\n{prompt_content[:500]}...")
+            
+            # List Agent Primitives for verification
+            if apm_dir.exists():
+                agent_primitives = list(apm_dir.rglob("*"))
+                agent_files = [f for f in agent_primitives if f.is_file()]
+                print(f"\n=== Agent Primitives Files ({len(agent_files)} found) ===")
+                for f in sorted(agent_files):
+                    rel_path = f.relative_to(project_dir)
+                    print(f"  {rel_path}")
+            else:
+                print(f"\n❌ Agent Primitives directory (.apm) missing - TEMPLATE BUNDLING FAILED")
+            
+            # Step 4: Compile Agent Primitives for any coding agent (equivalent to: apm compile)
+            print("\n=== Step 4: Compile Agent Primitives for any coding agent ===")
+            result = run_command(f"{apm_binary} compile", cwd=project_dir, show_output=True)
+            assert result.returncode == 0, f"Agent Primitives compilation failed: {result.stderr}"
+            
+            # Verify agents.md was generated
+            agents_md = project_dir / "AGENTS.md"
+            assert agents_md.exists(), "AGENTS.md not generated by compile step"
+            
+            # Show agents.md content for verification
+            agents_content = agents_md.read_text()
+            print(f"\n=== Generated AGENTS.md (first 500 chars) ===")
+            print(f"{agents_content[:500]}...")
+            
+            # Step 5: Install MCP dependencies (equivalent to: apm install)
+            print("\n=== Step 5: Install MCP dependencies ===")
+            
+            # Set Azure DevOps MCP runtime variables for domain restriction
+            env = os.environ.copy()
+            env['ado_domain'] = 'core'  # Limit to core domain only
+            # Leave ado_org unset to avoid connecting to real organization
+            
+            result = run_command(f"{apm_binary} install", cwd=project_dir, show_output=True, env=env)
+            assert result.returncode == 0, f"Dependency install failed: {result.stderr}"
+            
+            # Step 5.5: Domain restriction is handled via ado_domain environment variable
+            # No post-install injection needed - runtime variables are resolved during install
+            
+            # Step 6: Execute agentic workflows (equivalent to: apm run start --param name="<YourGitHubHandle>")
+            print("\n=== Step 6: Execute agentic workflows ===")
+            print(f"Environment: HOME={temp_e2e_home}, Primary token={'SET' if PRIMARY_TOKEN else 'NOT SET'}")
+            
+            # Respect integration script's token management
+            # Do not override - let test-integration.sh handle tokens properly
+            env = os.environ.copy()
+            env['HOME'] = temp_e2e_home
+            
+            # Run with real-time output streaming (using 'start' script which calls Copilot CLI)
+            cmd = f'{apm_binary} run start --param name="danielmeppiel"'
+            print(f"Executing: {cmd}")
+            
+            try:
+                process = subprocess.Popen(
+                    cmd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,  # Merge stderr into stdout
+                    text=True,
+                    cwd=project_dir,
+                    env=env
+                )
+                
+                output_lines = []
+                print("\n--- Copilot CLI Execution Output ---")
+                
+                # Stream output in real-time
+                for line in iter(process.stdout.readline, ''):
+                    if line:
+                        print(line.rstrip())  # Print to terminal
+                        output_lines.append(line)
+                
+                # Wait for completion
+                return_code = process.wait(timeout=120)
+                full_output = ''.join(output_lines)
+                
+                print("--- End Copilot CLI Output ---\n")
+                
+                # Verify execution
+                if return_code != 0:
+                    print(f"❌ Command failed with return code: {return_code}")
+                    print(f"Full output:\n{full_output}")
+                    
+                    # Check for common issues
+                    if "GITHUB_TOKEN" in full_output or "authentication" in full_output.lower():
+                        pytest.fail("Copilot CLI execution failed: GitHub token not properly configured")
+                    elif "Connection" in full_output or "timeout" in full_output.lower():
+                        pytest.fail("Copilot CLI execution failed: Network connectivity issue")
+                    else:
+                        pytest.fail(f"Golden scenario execution failed with return code {return_code}: {full_output}")
+                
+                # Verify output contains expected elements (using "Developer" instead of "E2E Tester")
+                output_lower = full_output.lower()
+                assert "danielmeppiel" in output_lower, \
+                    f"Parameter substitution failed. Expected 'Developer', got: {full_output}"
+                assert len(full_output.strip()) > 50, \
+                    f"Output seems too short, API call might have failed. Output: {full_output}"
+                
+                print(f"\n✅ Golden scenario completed successfully!")
+                print(f"Output length: {len(full_output)} characters")
+                print(f"Contains parameter: {'✓' if 'danielmeppiel' in output_lower else '❌'}")
+                
+            except subprocess.TimeoutExpired:
+                process.kill()
+                pytest.fail("Copilot CLI execution timed out after 120 seconds")
 
     @pytest.mark.skipif(not PRIMARY_TOKEN, reason="GitHub token (GITHUB_APM_PAT or GITHUB_TOKEN) required for E2E tests")
     def test_complete_golden_scenario_codex(self, temp_e2e_home, apm_binary):
