@@ -4,7 +4,8 @@ description: {{description}}
 author: {{author}}
 
 scripts:
-  start: "RUST_LOG=debug codex --skip-git-repo-check hello-world.prompt.md"
+  start: "copilot --log-level all --log-dir copilot-logs --allow-all -p hello-world.prompt.md"
+  codex: "RUST_LOG=debug codex --skip-git-repo-check hello-world.prompt.md"
   llm: "llm hello-world.prompt.md -m github/gpt-4o-mini"
 
 dependencies:

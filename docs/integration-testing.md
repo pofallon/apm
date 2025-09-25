@@ -151,6 +151,7 @@ All integration tests run on:
 
 ### E2E Tests Verify:
 - ✅ Complete golden scenario from README works
+- ✅ `apm runtime setup copilot` installs and configures GitHub Copilot CLI
 - ✅ `apm runtime setup codex` installs and configures Codex
 - ✅ `apm runtime setup llm` installs and configures LLM
 - ✅ `apm init my-hello-world` creates project correctly

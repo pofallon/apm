@@ -26,21 +26,20 @@
 
 > [!NOTE] 
 > **📋 Prerequisites**: Get tokens at [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new)  
-> - **`GITHUB_APM_PAT`** - Fine-grained PAT for access to private APM modules (optional, recommended)  
-> - **`GITHUB_TOKEN`** - User-scoped fine-grained PAT with read Models scope for GitHub Models API (optional, enables free GitHub Models access with Codex CLI and llm)
+> - **`GITHUB_COPILOT_PAT`** - User-scoped Fine-grained PAT with Copilot CLI subscription access 
+> - **`GITHUB_APM_PAT`** - (optional) - Fine-grained PAT for access to private APM modules 
 >
 > 📖 **Complete Setup Guide**: [Getting Started](docs/getting-started.md)
 
 ```bash
-# 1. Set your GitHub tokens (minimal setup)
-export GITHUB_APM_PAT=your_fine_grained_token_here
-export GITHUB_TOKEN=your_token_for_github_models
+# 1. Set your GitHub token (minimal setup)
+export GITHUB_COPILOT_PAT=your_fine_grained_token_here
 
-# 2. Install APM CLI (GitHub org members)
+# 2. Install APM CLI
 curl -sSL "https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh" | sh
 
-# 3. Set up runtime (uses free GitHub Models)
-apm runtime setup codex
+# 3. Set up runtime (GitHub Copilot CLI with native MCP support)
+apm runtime setup copilot
 
 # 3. Create your first AI package
 apm init my-project && cd my-project
@@ -73,7 +72,7 @@ dependencies:
     - microsoft/azure-devops-mcp
 
 scripts:
-  start: "RUST_LOG=debug codex --skip-git-repo-check hello-world.prompt.md"
+  start: "copilot --full-auto -p hello-world.prompt.md"
 ```
 
 ## What You Just Built
@@ -93,7 +92,7 @@ APM solves the AI agent context scalability problem through constraint satisfact
 
 ```bash
 apm init <project>    # Initialize AI-native project
-apm runtime setup     # Install coding agents (codex for now)
+apm runtime setup     # Install coding agents (copilot recommended)
 apm compile           # Generate AGENTS.md for compatibility  
 apm install           # Install APM and MCP dependencies from apm.yml
 apm deps list         # List installed APM dependencies

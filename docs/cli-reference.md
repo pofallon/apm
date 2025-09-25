@@ -13,7 +13,7 @@ export GITHUB_APM_PAT=your_fine_grained_token_here
 curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
 
 # 3. Setup runtime
-apm runtime setup codex  
+apm runtime setup copilot  
 
 # 4. Create project
 apm init my-project && cd my-project
@@ -717,7 +717,7 @@ apm list
 
 ## Tips & Best Practices
 
-1. **Start with runtime setup**: Run `apm runtime setup codex` 
+1. **Start with runtime setup**: Run `apm runtime setup copilot` 
 2. **Use GitHub Models for free tier**: Set `GITHUB_TOKEN` (user-scoped with Models read permission) for free Codex access
 3. **Discover MCP servers**: Use `apm search` to find available MCP servers before adding to apm.yml
 4. **Preview before running**: Use `apm preview` to check parameter substitution

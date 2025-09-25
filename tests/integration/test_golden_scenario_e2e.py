@@ -41,8 +41,7 @@ E2E_MODE = os.environ.get('APM_E2E_TESTS', '').lower() in ('1', 'true', 'yes')
 # Token detection for test requirements (read-only)
 # The integration script handles all token management properly
 GITHUB_APM_PAT = os.environ.get('GITHUB_APM_PAT')
-GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN') 
-GITHUB_NPM_PAT = os.environ.get('GITHUB_NPM_PAT')
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 
 # Primary token for requirement checking only (integration script handles actual usage)
 PRIMARY_TOKEN = GITHUB_APM_PAT or GITHUB_TOKEN

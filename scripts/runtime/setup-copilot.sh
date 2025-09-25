@@ -1,7 +1,6 @@
 #!/bin/bash
 # Setup script for GitHub Copilot CLI runtime
-# Handles npm authentication and @github/copilot installation with MCP configuration
-# Private preview version (Staffship)
+# Installs @github/copilot with MCP configuration support
 
 set -euo pipefail
 
@@ -73,134 +72,40 @@ check_npm_version() {
     log_success "npm version $npm_version ✓"
 }
 
-# Check GitHub npm authentication
-check_github_npm_auth() {
-    log_info "Checking GitHub npm registry authentication..."
-    
-    # Check if already logged in to @github scope
-    if npm whoami --scope=@github --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
-        local username=$(npm whoami --scope=@github --registry=https://npm.pkg.github.com)
-        log_success "Already authenticated to GitHub npm registry as: $username"
-        return 0
-    else
-        log_info "Attempting authentication to GitHub npm registry"
-        
-        # Check if we have GITHUB_NPM_PAT for automatic authentication
-        if [[ -n "$GITHUB_NPM_PAT" ]]; then
-            log_info "Found GITHUB_NPM_PAT, attempting automatic npm authentication..."
-            if setup_npm_auth_with_token; then
-                return 0
-            fi
-        fi
-        
-        return 1
-    fi
-}
 
-# Set up npm authentication using GITHUB_NPM_PAT token
-setup_npm_auth_with_token() {
-    if [[ -z "$GITHUB_NPM_PAT" ]]; then
-        log_error "GITHUB_NPM_PAT environment variable not set"
-        return 1
-    fi
-    
-    log_info "Setting up npm authentication with GITHUB_NPM_PAT..."
-    
-    # Use npm login in non-interactive mode with the token
-    # This mimics: npm login --scope=@github --auth-type=legacy --registry=https://npm.pkg.github.com
-    
-    # Configure npm registry for @github scope
-    npm config set @github:registry https://npm.pkg.github.com/
-    
-    # Set the auth token directly in the npm configuration
-    npm config set //npm.pkg.github.com/:_authToken "${GITHUB_NPM_PAT}"
-    
-    # Test the authentication
-    if npm whoami --scope=@github --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
-        local username=$(npm whoami --scope=@github --registry=https://npm.pkg.github.com)
-        log_success "Successfully authenticated to GitHub npm registry as: $username using GITHUB_NPM_PAT"
-        return 0
-    else
-        log_error "Failed to authenticate with GITHUB_NPM_PAT"
-        return 1
-    fi
-}
-
-# Guide user through GitHub npm authentication
-setup_github_npm_auth() {
-    log_info "Setting up GitHub npm registry authentication..."
-    echo ""
-    log_info "GitHub Copilot CLI is currently in private preview and requires authentication"
-    log_info "to the GitHub npm registry. Please follow these steps:"
-    echo ""
-    
-    echo "${HIGHLIGHT}Step 1: Create a GitHub Personal Access Token${RESET}"
-    echo "1. Go to: https://github.com/settings/tokens/new"
-    echo "2. Select 'Classic token'"
-    echo "3. Add 'read:packages' scope"
-    echo "4. Enable SSO for the 'github' organization"
-    echo "5. Set expiration < 90 days"
-    echo "6. Generate token and copy it"
-    echo ""
-    
-    echo "${HIGHLIGHT}Step 2: Authenticate with npm${RESET}"
-    echo "Run this command and enter your GitHub username and PAT:"
-    echo ""
-    echo "  npm login --scope=@github --auth-type=legacy --registry=https://npm.pkg.github.com"
-    echo ""
-    
-    # Ask if they want to try authentication now
-    if command -v read >/dev/null 2>&1; then
-        read -p "Would you like to authenticate now? (y/N): " -n 1 -r
-        echo ""
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            log_info "Starting npm authentication..."
-            if npm login --scope=@github --auth-type=legacy --registry=https://npm.pkg.github.com; then
-                log_success "Successfully authenticated to GitHub npm registry!"
-            else
-                log_error "Authentication failed. Please try again manually."
-                exit 1
-            fi
-        else
-            log_warning "Please authenticate manually and then re-run this script"
-            exit 1
-        fi
-    else
-        log_warning "Please authenticate manually and then re-run this script"
-        exit 1
-    fi
-}
 
 # Install Copilot CLI via npm
 install_copilot_cli() {
     log_info "Installing GitHub Copilot CLI..."
     
-    # Install globally - npm will use the configured registries (GitHub for @github scope, default for others)
+    # Install globally from public npm registry
     if npm install -g "$COPILOT_PACKAGE"; then
         log_success "Successfully installed $COPILOT_PACKAGE"
     else
         log_error "Failed to install $COPILOT_PACKAGE"
         log_info "This might be due to:"
-        log_info "  - Authentication issues with GitHub npm registry"
-        log_info "  - Insufficient permissions for global npm install"
+        log_info "  - Insufficient permissions for global npm install (try with sudo)"
         log_info "  - Network connectivity issues"
+        log_info "  - Node.js/npm version compatibility"
         exit 1
     fi
 }
-
-# Source the centralized GitHub token helper  
-source "$SCRIPT_DIR/github-token-helper.sh"
 
 # Setup GitHub MCP Server environment for Copilot CLI
 setup_github_mcp_environment() {
     log_info "Setting up GitHub MCP Server environment for Copilot CLI..."
     
-    # Use centralized token management
-    setup_github_tokens
+    # Check for available GitHub tokens for MCP server setup
+    local copilot_token=""
     
-    # For Copilot CLI MCP server, we need GITHUB_PERSONAL_ACCESS_TOKEN
-    local copilot_token
-    copilot_token=$(get_token_for_runtime "copilot")
+    # Check token precedence: GITHUB_COPILOT_PAT -> GITHUB_TOKEN -> GITHUB_APM_PAT
+    if [[ -n "${GITHUB_COPILOT_PAT:-}" ]]; then
+        copilot_token="$GITHUB_COPILOT_PAT"
+    elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        copilot_token="$GITHUB_TOKEN"
+    elif [[ -n "${GITHUB_APM_PAT:-}" ]]; then
+        copilot_token="$GITHUB_APM_PAT"
+    fi
     
     if [[ -n "$copilot_token" ]]; then
         # Set GITHUB_PERSONAL_ACCESS_TOKEN for Copilot CLI's automatic GitHub MCP Server setup
@@ -269,12 +174,7 @@ setup_copilot() {
     check_node_version
     check_npm_version
     
-    # Check and setup GitHub npm authentication
-    if ! check_github_npm_auth; then
-        setup_github_npm_auth
-    fi
-    
-    # Install Copilot CLI
+    # Install Copilot CLI (now available on public npm registry)
     install_copilot_cli
     
     # Setup directory structure (unless vanilla mode)
@@ -302,7 +202,7 @@ setup_copilot() {
         echo ""
         log_success "✨ GitHub Copilot CLI installed and configured!"
         echo "   - Use 'apm install' to configure MCP servers for your projects"
-        echo "   - Copilot CLI provides advanced AI coding assistance"
+        echo "   - Copilot CLI provides advanced AI coding assistance with GitHub integration"
         echo "   - Interactive mode available: just run 'copilot'"
     else
         echo "1. Configure Copilot CLI as needed (run 'copilot' for interactive setup)"

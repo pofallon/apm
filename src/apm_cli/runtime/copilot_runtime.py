@@ -79,8 +79,6 @@ class CopilotRuntime(RuntimeAdapter):
                 # Check for common issues
                 if "not logged in" in full_output.lower():
                     raise RuntimeError("Copilot CLI execution failed: Not logged in. Run 'copilot' and use '/login' command.")
-                elif "npm" in full_output and "authentication" in full_output.lower():
-                    raise RuntimeError("Copilot CLI execution failed: npm authentication issue. Ensure you're logged in to @github npm registry.")
                 else:
                     raise RuntimeError(f"Copilot CLI execution failed with exit code {return_code}")
             

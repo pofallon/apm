@@ -4,11 +4,12 @@ APM manages LLM runtime installation and configuration automatically. This guide
 
 ## Overview
 
-APM acts as a runtime package manager, downloading and configuring LLM runtimes from their official sources. Currently supports two runtimes:
+APM acts as a runtime package manager, downloading and configuring LLM runtimes from their official sources. Currently supports three runtimes:
 
 | Runtime | Description | Best For | Configuration |
 |---------|-------------|----------|---------------|
-| [**OpenAI Codex**](https://github.com/openai/codex) | OpenAI's Codex CLI | Code tasks, MCP support | Auto-configured with GitHub Models |
+| [**GitHub Copilot CLI**](https://github.com/github/copilot-cli) | GitHub's Copilot CLI (Recommended) | Advanced AI coding, native MCP support | Auto-configured, no auth needed |
+| [**OpenAI Codex**](https://github.com/openai/codex) | OpenAI's Codex CLI | Code tasks, GitHub Models API | Auto-configured with GitHub Models |
 | [**LLM Library**](https://llm.datasette.io/en/stable/index.html) | Simon Willison's `llm` CLI | General use, many providers | Manual API key setup |
 
 ## Quick Setup
@@ -19,20 +20,52 @@ APM acts as a runtime package manager, downloading and configuring LLM runtimes 
 curl -sSL https://raw.githubusercontent.com/danielmeppiel/apm/main/install.sh | sh
 
 # 2. Setup AI runtime (downloads and configures automatically)
-apm runtime setup codex
-
-# 3. Set GitHub token for free models (fine-grained token preferred)
-export GITHUB_TOKEN=your_github_token
+apm runtime setup copilot
 ```
 
 ### Runtime Management
 ```bash
 apm runtime list              # Show installed runtimes
 apm runtime setup llm         # Install LLM library
+apm runtime setup copilot     # Install GitHub Copilot CLI (Recommended)
 apm runtime setup codex       # Install Codex CLI
 ```
 
-## OpenAI Codex Runtime (Recommended)
+## GitHub Copilot CLI Runtime (Recommended)
+
+APM automatically installs GitHub Copilot CLI from the public npm registry. Copilot CLI provides advanced AI coding assistance with native MCP integration and GitHub context awareness.
+
+### Setup
+
+#### 1. Install via APM
+```bash
+apm runtime setup copilot
+```
+
+This automatically:
+- Installs GitHub Copilot CLI from public npm registry
+- Requires Node.js v22+ and npm v10+
+- Creates MCP configuration directory at `~/.copilot/`
+- No authentication required for installation
+
+### Usage
+
+APM executes scripts defined in your `apm.yml`. When scripts reference `.prompt.md` files, APM compiles them with parameter substitution. See [Prompts Guide](prompts.md) for details.
+
+```bash
+# Run scripts (from apm.yml) with parameters
+apm run start --param service_name=api-gateway
+apm run debug --param service_name=api-gateway
+```
+
+**Script Configuration (apm.yml):**
+```yaml
+scripts:
+  start: "copilot --full-auto -p analyze-logs.prompt.md"
+  debug: "copilot --full-auto -p analyze-logs.prompt.md --log-level debug"
+```
+
+## OpenAI Codex Runtime
 
 APM automatically downloads, installs, and configures the Codex CLI with GitHub Models for free usage.
 
@@ -56,8 +89,6 @@ export GITHUB_TOKEN=your_github_token
 ```
 
 ### Usage
-
-APM executes scripts defined in your `apm.yml`. When scripts reference `.prompt.md` files, APM compiles them with parameter substitution. See [Prompts Guide](prompts.md) for details.
 
 ```bash
 # Run scripts (from apm.yml) with parameters
@@ -122,15 +153,23 @@ scripts:
 ```bash
 # Run scripts defined in apm.yml
 apm run start --param service_name=api-gateway
-apm run llm --param service_name=api-gateway
+apm run copilot-analysis --param service_name=api-gateway
 apm run debug --param service_name=api-gateway
 ```
 
-### Code Analysis
+### Code Analysis with Copilot CLI
 ```bash
-# Scripts that use Codex for code understanding
+# Scripts that use Copilot CLI for advanced code understanding
 apm run code-review --param pull_request=123
 apm run analyze-code --param file_path="src/main.py"
+apm run refactor --param component="UserService"
+```
+
+### Code Analysis with Codex
+```bash
+# Scripts that use Codex for code understanding
+apm run codex-review --param pull_request=123
+apm run codex-analyze --param file_path="src/main.py"
 ```
 
 ### Documentation Tasks
@@ -145,6 +184,7 @@ apm run summarize --param report_type="weekly"
 **"Runtime not found"**
 ```bash
 # Install missing runtime
+apm runtime setup copilot  # Recommended
 apm runtime setup codex
 apm runtime setup llm
 
@@ -152,10 +192,14 @@ apm runtime setup llm
 apm runtime list
 ```
 
-**"No GitHub token"**
+**"Command not found: copilot"**
 ```bash
-# Set GitHub token for free models
-export GITHUB_TOKEN=your_github_token
+# Ensure Node.js v22+ and npm v10+ are installed
+node --version  # Should be v22+
+npm --version   # Should be v10+
+
+# Reinstall Copilot CLI
+apm runtime setup copilot
 ```
 
 **"Command not found: codex"**
