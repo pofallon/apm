@@ -14,8 +14,9 @@ class TestCopilotRuntime:
     
     def test_runtime_name_static(self):
         """Test runtime name is consistent."""
-        runtime = CopilotRuntime()
-        assert runtime.get_runtime_name() == "copilot"
+        with patch.object(CopilotRuntime, 'is_available', return_value=True):
+            runtime = CopilotRuntime()
+            assert runtime.get_runtime_name() == "copilot"
     
     @patch('shutil.which')
     def test_is_available_true(self, mock_which):
@@ -37,7 +38,15 @@ class TestCopilotRuntime:
     
     def test_get_runtime_info(self):
         """Test getting runtime information."""
-        with patch.object(CopilotRuntime, 'is_available', return_value=True):
+        with patch.object(CopilotRuntime, 'is_available', return_value=True), \
+             patch('subprocess.run') as mock_subprocess:
+            
+            # Mock successful version check
+            mock_result = Mock()
+            mock_result.returncode = 0
+            mock_result.stdout = "copilot version 1.0.0"
+            mock_subprocess.return_value = mock_result
+            
             runtime = CopilotRuntime()
             info = runtime.get_runtime_info()
             
