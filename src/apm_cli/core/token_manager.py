@@ -8,7 +8,6 @@ Token Architecture:
 - GITHUB_COPILOT_PAT: User-scoped PAT specifically for Copilot
 - GITHUB_APM_PAT: Fine-grained PAT for APM module access
 - GITHUB_TOKEN: User-scoped PAT for GitHub Models API access
-- GITHUB_NPM_PAT: Classic PAT for GitHub npm registry access
 
 Runtime Requirements:
 - Codex CLI: Uses GITHUB_TOKEN (must be user-scoped for GitHub Models)
@@ -26,7 +25,6 @@ class GitHubTokenManager:
         'copilot': ['GITHUB_COPILOT_PAT', 'GITHUB_TOKEN', 'GITHUB_APM_PAT'],
         'models': ['GITHUB_TOKEN'],  # GitHub Models requires user-scoped PAT
         'modules': ['GITHUB_APM_PAT', 'GITHUB_TOKEN'],  # APM module access
-        'npm': ['GITHUB_NPM_PAT']  # npm registry access
     }
     
     # Runtime-specific environment variable mappings
@@ -70,7 +68,7 @@ class GitHubTokenManager:
         """Get the best available token for a specific purpose.
         
         Args:
-            purpose: Token purpose ('copilot', 'models', 'modules', 'npm')
+            purpose: Token purpose ('copilot', 'models', 'modules')
             env: Environment to check (defaults to os.environ)
             
         Returns:

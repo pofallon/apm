@@ -53,7 +53,7 @@ Direct integration with OpenAI's development-focused models:
 
 ```bash
 # Install and configure  
-apm runtime setup codex
+apm runtime setup copilot
 
 # Features
 - GitHub Models API backend

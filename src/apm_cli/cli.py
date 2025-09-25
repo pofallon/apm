@@ -912,7 +912,7 @@ def _install_mcp_dependencies(mcp_deps: List[str], runtime: str = None, exclude:
             manager = RuntimeManager()
             installed_runtimes = []
             
-            # Check each MCP-compatible runtime
+            # Check each MCP-compatible runtime (prioritize Copilot CLI)
             for runtime_name in ['copilot', 'codex', 'vscode']:
                 try:
                     if runtime_name == 'vscode':
@@ -930,7 +930,7 @@ def _install_mcp_dependencies(mcp_deps: List[str], runtime: str = None, exclude:
                     # Runtime not supported or doesn't have MCP support
                     continue
         except ImportError:
-            # Fallback to basic shutil check for known MCP runtimes
+            # Fallback to basic shutil check for known MCP runtimes (prioritize Copilot CLI)
             import shutil
             installed_runtimes = [rt for rt in ['copilot', 'codex', 'vscode'] 
                                 if shutil.which(rt if rt != 'vscode' else 'code') is not None]

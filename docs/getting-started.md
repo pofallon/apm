@@ -8,10 +8,6 @@ Welcome to APM - the AI Package Manager that transforms any project into reliabl
 
 APM requires GitHub tokens for accessing models and package registries. Get your tokens at [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new):
 
-### GitHub Tokens Required
-
-APM requires GitHub tokens for accessing models and package registries. Get your tokens at [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new):
-
 #### Required Tokens
 
 ##### GITHUB_APM_PAT (Fine-grained PAT - Recommended)
@@ -178,7 +174,15 @@ This creates a platform-specific binary at `./dist/apm-{platform}-{arch}/apm` th
 
 APM works with multiple AI coding agents. Choose your preferred runtime:
 
-### OpenAI Codex CLI (Recommended)
+### GitHub Copilot CLI (Recommended)
+
+```bash
+apm runtime setup copilot
+```
+
+Uses GitHub Copilot CLI with native MCP integration and advanced AI coding assistance.
+
+### OpenAI Codex CLI
 
 ```bash
 apm runtime setup codex

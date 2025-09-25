@@ -4,6 +4,7 @@ from typing import List, Dict, Any, Optional, Type
 from .base import RuntimeAdapter
 from .llm_runtime import LLMRuntime
 from .codex_runtime import CodexRuntime
+from .copilot_runtime import CopilotRuntime
 
 
 class RuntimeFactory:
@@ -11,8 +12,9 @@ class RuntimeFactory:
     
     # Registry of available runtime adapters in order of preference
     _RUNTIME_ADAPTERS: List[Type[RuntimeAdapter]] = [
-        CodexRuntime,    # Prefer Codex for its native MCP support
-        LLMRuntime,      # Fallback to LLM library
+        CopilotRuntime,  # Prefer Copilot CLI for its native MCP and advanced features
+        CodexRuntime,    # Fallback to Codex for its native MCP support
+        LLMRuntime,      # Final fallback to LLM library
     ]
     
     @classmethod
@@ -94,7 +96,7 @@ class RuntimeFactory:
         
         raise RuntimeError(
             "No runtimes available. Install at least one of: "
-            "Codex CLI (npm i -g @openai/codex@native), or LLM library (pip install llm)"
+            "Copilot CLI (npm i -g @github/copilot), Codex CLI (npm i -g @openai/codex@native), or LLM library (pip install llm)"
         )
     
     @classmethod

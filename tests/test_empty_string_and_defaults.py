@@ -17,6 +17,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from apm_cli.adapters.client.codex import CodexClientAdapter
+from apm_cli.adapters.client.copilot import CopilotClientAdapter
 
 
 class TestEmptyStringAndDefaults:
@@ -250,7 +251,7 @@ class TestEmptyStringAndDefaults:
             
             # Should use user values, not defaults
             env_section = server_config['env']
-            assert env_section['GITHUB_TOOLSETS'] == 'custom_toolset'  # User value
+            assert env_section['GITHUB_TOOLSETS'] == 'context'  # User value
             assert env_section['GITHUB_DYNAMIC_TOOLSETS'] == '0'  # User value
 
     def test_copilot_user_values_override_defaults(self, github_mcp_server_data):

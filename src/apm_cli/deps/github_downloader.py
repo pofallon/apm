@@ -69,7 +69,7 @@ class GitHubPackageDownloader:
         sanitized = re.sub(r'(ghp_|gho_|ghu_|ghs_|ghr_)[a-zA-Z0-9_]+', '***', sanitized)
         
         # Remove environment variable values that might contain tokens
-        sanitized = re.sub(r'(GITHUB_TOKEN|GITHUB_APM_PAT|GH_TOKEN|GITHUB_COPILOT_PAT|GITHUB_NPM_PAT)=[^\s]+', r'\1=***', sanitized)
+        sanitized = re.sub(r'(GITHUB_TOKEN|GITHUB_APM_PAT|GH_TOKEN|GITHUB_COPILOT_PAT)=[^\s]+', r'\1=***', sanitized)
         
         return sanitized
 
