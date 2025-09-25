@@ -113,7 +113,7 @@ class TestCopilotRuntime:
             
             # Verify command options were added
             call_args = mock_popen.call_args[0][0]
-            assert "--full-auto" in call_args
+            assert "--allow-all-tools" in call_args
             assert "--log-level" in call_args
             assert "debug" in call_args
             assert "--add-dir" in call_args

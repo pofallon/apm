@@ -213,7 +213,7 @@ setup_copilot() {
     log_info "GitHub Copilot CLI Features:"
     echo "   - Interactive mode: copilot"
     echo "   - Direct prompts: copilot -p \"your prompt\""
-    echo "   - Auto-approval: copilot --full-auto"
+    echo "   - Auto-approval: copilot --allow-all-tools"
     echo "   - Directory access: copilot --add-dir /path/to/directory"
     echo "   - Logging: copilot --log-dir --log-level debug"
 }

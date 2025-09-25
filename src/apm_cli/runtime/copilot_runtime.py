@@ -30,7 +30,7 @@ class CopilotRuntime(RuntimeAdapter):
             prompt_content: The prompt text to execute
             **kwargs: Additional arguments that may include:
                 - full_auto: Enable automatic tool execution (default: False)
-                - log_level: Copilot CLI log level (default: "default")
+                - log_level: Copilot CLI log level (default: "default")  
                 - add_dirs: Additional directories to allow file access
                 
         Returns:
@@ -42,7 +42,7 @@ class CopilotRuntime(RuntimeAdapter):
             
             # Add optional arguments from kwargs
             if kwargs.get("full_auto", False):
-                cmd.append("--full-auto")
+                cmd.append("--allow-all-tools")
             
             log_level = kwargs.get("log_level", "default")
             if log_level != "default":
