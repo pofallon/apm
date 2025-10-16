@@ -91,7 +91,7 @@ jobs:
     - name: Run smoke tests
       env:
         GITHUB_APM_PAT: ${{ secrets.GH_CLI_PAT }}    # Primary: APM module access (FG PAT)
-      run: uv run pytest tests/integration/test_runtime_smoke.py -v -k "not test_codex_runtime_setup"
+      run: uv run pytest tests/integration/test_runtime_smoke.py -v
 
   # Build binaries
   build:
